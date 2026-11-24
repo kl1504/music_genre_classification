@@ -1,13 +1,17 @@
+import sys
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
-from pipeline import load_artifacts, predict_genre
+folder = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(folder / "src"))
 
+from pipeline import load_artifacts, predict_genre
 
 @st.cache_resource
 def get_artifacts():
-    return load_artifacts()
-
+    return load_artifacts(folder / "models")
 
 artifacts = get_artifacts()
 
@@ -32,4 +36,3 @@ if uploaded is not None:
 
         st.subheader("Probabilités par genre")
         st.bar_chart(pd.Series(proba, index=artifacts["le"].classes_))
-        
